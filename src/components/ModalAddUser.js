@@ -12,7 +12,6 @@ const ModalAddUser = (props) => {
     handleUpdateTable,
     showTable,
     dataUserEdit,
-    handleEditUser,
     dataDeleteUser,
     handleEditUserFromModal,
     handleDeleteUserFromModal,

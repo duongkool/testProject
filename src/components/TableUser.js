@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { fetchAllUser } from "../services/UserServices";
@@ -6,7 +8,7 @@ import ModalAddUser from "./ModalAddUser";
 import _ from "lodash";
 import { debounce } from "lodash";
 import "./TableUser.scss";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 import Papa from "papaparse";
 import { toast } from "react-toastify";
 
@@ -30,6 +32,7 @@ const TableUsers = (props) => {
     if (res && res.data) {
       setListUser(res.data);
       setTotalPage(res.total_pages);
+      console.log(listUser);
     }
   };
   const handleUpdateTable = (user) => {
@@ -177,14 +180,14 @@ const TableUsers = (props) => {
             onClick={() => handleCreateUser()}
             className="btn btn-success"
           >
-            ADD NEW USER
+            Add new user
           </button>
         </div>
       </div>
       <div className="col-4 my-3">
         <input
           onChange={(event) => handleSearchUser(event)}
-          className="form-control"
+          className="form-control "
           placeholder="Search user by email..."
         />
       </div>
@@ -260,7 +263,7 @@ const TableUsers = (props) => {
         nextLabel="next >"
         onPageChange={handlePageClick}
         pageRangeDisplayed={5}
-        pageCount={totalPage}
+        pageCount={+totalPage}
         previousLabel="< previous"
         renderOnZeroPageCount={null}
         pageClassName="page-item"

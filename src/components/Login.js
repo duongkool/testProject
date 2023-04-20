@@ -1,8 +1,9 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import "./Login.scss";
 import { loginAPI } from "../services/UserServices";
 import { toast } from "react-toastify";
+import { useContext, useRef, useState } from "react";
+import { UserContext } from "../context/UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +11,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { loginContext } = useContext(UserContext);
+  const inputElement = useRef();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -19,10 +22,25 @@ const Login = () => {
       setIsLoading(true);
       let res = await loginAPI("eve.holt@reqres.in", password);
       if (res && res.token) {
-        localStorage.setItem("token", res.token);
+        loginContext(email, res.token);
         setIsLoading(false);
         toast.success("done");
+        navigate("/");
+      } else {
+        if (res && res.status === 400) {
+          toast.error(res.data.error);
+        }
       }
+    }
+  };
+  const handleNextFocus = (event) => {
+    if (event && event.key === "Enter") {
+      inputElement.current.focus();
+    }
+  };
+  const handleNextSubmit = (event) => {
+    if (event && event.key === "Enter") {
+      handleLogin();
     }
   };
   return (
@@ -37,12 +55,15 @@ const Login = () => {
           value={email}
           type="text"
           placeholder="Email or username..."
+          onKeyDown={(event) => handleNextFocus(event)}
         />
         <input
           onChange={(event) => setPassword(event.target.value)}
           value={password}
           type={showPassword === true ? "text" : "password"}
           placeholder="password..."
+          ref={inputElement}
+          onKeyDown={(event) => handleNextSubmit(event)}
         />
         <span
           onClick={() => setShowPassword(!showPassword)}
@@ -64,7 +85,7 @@ const Login = () => {
       </button>
       <div className="back">
         <span onClick={() => navigate("/")}>
-          <i class="fa-solid fa-angles-left mx-1"></i>Go back
+          <i className="fa-solid fa-angles-left mx-1"></i>Go back
         </span>
       </div>
     </div>

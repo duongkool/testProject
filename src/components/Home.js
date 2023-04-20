@@ -1,5 +1,12 @@
 import "./Home.scss";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from 'react-router-dom';
+
 const Home = () => {
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate()
+
   return (
     <div className="home-container">
       <div className="homepage-content col-6">
@@ -12,9 +19,16 @@ const Home = () => {
           one. Create a typeform instead—and make everyone happy.
         </p>
         <div className="title-3">
-          <button className="btn btn-lg btn-dark">
+          {user.auth === true 
+          ?
+          <button onClick={()=>navigate('/users')} className="btn btn-lg btn-dark">
+            Doing Quiz Now  
+          </button>
+          :
+          <button onClick={()=>navigate('/login')} className="btn btn-lg btn-dark">
             Get started - it's free
           </button>
+        }
         </div>
       </div>
     </div>
